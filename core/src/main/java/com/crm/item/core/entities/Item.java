@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.boot.cfgxml.spi.MappingReference;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,5 +36,6 @@ public class Item {
     @Column(name = "is_active", nullable = false)
     private Boolean active;
 
-    public Integer getParentItemId(){ return parentItem.getId(); }
+    public Integer getParentItemId(){
+        return parentItem != null ?  parentItem.getId() : null; }
 }

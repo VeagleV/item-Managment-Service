@@ -3,15 +3,13 @@ package com.crm.item.core.repositories;
 import com.crm.item.core.entities.ItemList;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ItemListRepository extends JpaRepository<ItemList, Integer> {
 
-    Optional<ItemList> findByItemId(Integer itemId);
+    List<ItemList> findByItem_Id(Integer itemId);
 
-    Optional<ItemList> findById(Integer itemListId);
-
-    Optional<ItemList> findByWarehouseId(Integer warehouseId);
+    List<ItemList> findByWarehouseId(Integer warehouseId);
 
 
 
