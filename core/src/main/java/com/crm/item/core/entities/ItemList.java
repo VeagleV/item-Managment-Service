@@ -18,7 +18,7 @@ public class ItemList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "itemlist_id")
     private Integer id;
 
 
