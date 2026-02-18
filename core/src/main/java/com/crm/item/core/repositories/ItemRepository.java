@@ -10,7 +10,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     Optional<Item> findById(Integer id);
 
-    Optional<List<Item>> findAllByParentItemId(Integer parentItemId);
+    Optional<Item> findAllByParentItemId(Integer parentItemId);
 
     Optional<Item> findByEan(String ean);
 
