@@ -3,7 +3,7 @@ package com.crm.item.core.mapper;
 
 import com.crm.item.core.dtos.ItemRequest;
 import com.crm.item.core.dtos.ItemResponse;
-import com.crm.item.core.entites.Item;
+import com.crm.item.core.entities.Item;
 import org.springframework.stereotype.Component;
 
 

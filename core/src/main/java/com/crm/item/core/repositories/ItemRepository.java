@@ -1,6 +1,6 @@
 package com.crm.item.core.repositories;
 
-import com.crm.item.core.entites.Item;
+import com.crm.item.core.entities.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.crm.item.core.services;
 
-import com.crm.item.core.entites.ItemList;
+import com.crm.item.core.entities.ItemList;
 import com.crm.item.core.repositories.ItemListRepository;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.crm.item.core.entites;
+package com.crm.item.core.entities;
 
 
 import jakarta.persistence.*;

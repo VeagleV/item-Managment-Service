@@ -2,7 +2,7 @@ package com.crm.item.core.services;
 
 import com.crm.item.core.dtos.ItemRequest;
 import com.crm.item.core.dtos.ItemResponse;
-import com.crm.item.core.entites.Item;
+import com.crm.item.core.entities.Item;
 import com.crm.item.core.handlers.EanHandler;
 import com.crm.item.core.mapper.ItemMapper;
 import com.crm.item.core.repositories.ItemRepository;

@@ -2,11 +2,13 @@ package com.crm.item.core.controllers;
 
 import com.crm.item.core.dtos.ItemRequest;
 import com.crm.item.core.dtos.ItemResponse;
-import com.crm.item.core.entites.ItemList;
+import com.crm.item.core.entities.ItemList;
 import com.crm.item.core.services.ItemListService;
 import com.crm.item.core.services.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +49,7 @@ public class ItemController {
 
     @Operation(summary = "Создание товара")
     @PostMapping
-    public ResponseEntity<ItemResponse> createItem(@RequestBody ItemRequest itemRequest) {
+    public ResponseEntity<ItemResponse> createItem(@RequestBody @Valid ItemRequest itemRequest) {
         return itemService.save(itemRequest);
     }
 
@@ -61,7 +63,7 @@ public class ItemController {
     //FIXME: Не работает. выкидывает 415 Unsupported Media Type
     @Operation(summary = "обновление товара")
     @PutMapping("/{id}")
-    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody ItemRequest itemRequest) {
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody @Valid ItemRequest itemRequest) {
         return itemService.update(id, itemRequest);
     }
 
@@ -86,7 +88,9 @@ public class ItemController {
 
     @Operation(summary = "обновление количества товара, который хранится на конкретном складе")
     @PutMapping("/itemsList/{warehouseId}/{itemId}")
-    public ResponseEntity<ItemList> updateItemListQuantity(@PathVariable Integer warehouseId, @PathVariable Integer itemId, @RequestParam Integer quantity) {
+    public ResponseEntity<ItemList> updateItemListQuantity(@PathVariable @PositiveOrZero Integer warehouseId,
+                                                           @PathVariable @PositiveOrZero Integer itemId,
+                                                           @RequestParam @PositiveOrZero Integer quantity) {
         return itemListService.updateQuantity(warehouseId, itemId, quantity);
     }
 
