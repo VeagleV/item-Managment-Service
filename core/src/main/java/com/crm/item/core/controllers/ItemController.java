@@ -2,7 +2,7 @@ package com.crm.item.core.controllers;
 
 
 import com.crm.item.core.dtos.ItemDTO;
-import com.crm.item.core.entities.ItemList;
+import com.crm.item.core.entites.ItemList;
 import com.crm.item.core.servicies.ItemListService;
 import com.crm.item.core.servicies.ItemService;
 import io.swagger.v3.oas.annotations.Operation;

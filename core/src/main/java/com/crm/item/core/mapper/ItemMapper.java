@@ -1,7 +1,7 @@
 package com.crm.item.core.mapper;
 
 
-import com.crm.item.core.entities.Item;
+import com.crm.item.core.entites.Item;
 import com.crm.item.core.dtos.ItemDTO;
 import com.crm.item.core.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;

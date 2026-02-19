@@ -1,6 +1,6 @@
 package com.crm.item.core.servicies;
 
-import com.crm.item.core.entities.ItemList;
+import com.crm.item.core.entites.ItemList;
 import com.crm.item.core.repositories.ItemListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class ItemListService {
         ItemList itemList = itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
         if (itemList == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         itemList.setQuantity(newQuantity);
-        itemListRepository.save(itemList);
+        save(itemList);
         return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
