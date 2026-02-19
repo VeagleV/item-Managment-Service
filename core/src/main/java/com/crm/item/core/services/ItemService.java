@@ -44,7 +44,10 @@ public class ItemService {
     public ResponseEntity<ItemResponse> save(ItemRequest ItemRequest) {
         String ean = ItemRequest.getEan();
         if (ean == null || ean.isEmpty()) {
-            ItemRequest.setEan(eanHandler.generateEan(13));
+            String newEan = eanHandler.generateEan(13);
+            while (itemRepository.existsByEanAndActiveIsTrue(newEan)){
+                newEan = eanHandler.generateEan(13);
+            }
         } else {
             if (!eanHandler.isValidEan(ean)) {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
