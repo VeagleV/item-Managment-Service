@@ -1,36 +1,32 @@
 package com.crm.item.core.mapper;
 
 
+import com.crm.item.core.dtos.ItemRequest;
+import com.crm.item.core.dtos.ItemResponse;
 import com.crm.item.core.entites.Item;
-import com.crm.item.core.dtos.ItemDTO;
-import com.crm.item.core.repositories.ItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class ItemMapper {
 
-    @Autowired
-    private ItemRepository itemRepository;
-
-    public ItemDTO toDTO(Item item) {
-        return ItemDTO.builder()
+    public ItemResponse toItemResponse(Item item) {
+        return ItemResponse.builder()
                 .id(item.getId())
                 .name(item.getName())
-                .unit(item.getUnit())
                 .ean(item.getEan())
                 .parentItemId(item.getParentItemId())
+                .unit(item.getUnit())
                 .build();
     }
-    public Item toEntity(ItemDTO itemDTO){
+
+    public Item toItem(ItemRequest itemRequest, Item parentItem) {
         return Item.builder()
-                .id(itemDTO.getId())
-                .name(itemDTO.getName())
-                .unit(itemDTO.getUnit())
-                .ean(itemDTO.getEan())
-                .active(true)
-                .parentItem(itemRepository.findById(itemDTO.getParentItemId()).orElse(null))
+                .name(itemRequest.getName())
+                .ean(itemRequest.getEan())
+                .unit(itemRequest.getUnit())
+                .parentItem(parentItem)
                 .build();
     }
+
 }

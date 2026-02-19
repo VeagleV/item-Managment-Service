@@ -23,7 +23,7 @@ public class Item {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "ean", nullable = false, length = 13)
+    @Column(name = "ean", nullable = false, unique = true, length = 13)
     private String ean;
 
     @Column(nullable = false)

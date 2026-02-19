@@ -2,6 +2,7 @@ package com.crm.item.core.servicies;
 
 import com.crm.item.core.entites.ItemList;
 import com.crm.item.core.repositories.ItemListRepository;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,9 @@ public class ItemListService {
     }
 
 
-    public void save(ItemList itemList) {
+    public ResponseEntity<ItemList> save(ItemList itemList) {
         itemListRepository.save(itemList);
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
     public ResponseEntity<ItemList> findById(Integer id) {
@@ -46,12 +48,11 @@ public class ItemListService {
         return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    public ResponseEntity<ItemList> updateQuantity(Integer warehouseId, Integer itemId, Integer newQuantity) {
+    public ResponseEntity<ItemList> updateQuantity(Integer warehouseId, Integer itemId,@PositiveOrZero Integer newQuantity) {
         ItemList itemList = itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
         if (itemList == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         itemList.setQuantity(newQuantity);
-        save(itemList);
-        return new ResponseEntity<>(itemList, HttpStatus.OK);
+        return save(itemList);
     }
 
     //TODO: реализовать сохранение / обновление товаров с помощью JSON/XLSX файлов

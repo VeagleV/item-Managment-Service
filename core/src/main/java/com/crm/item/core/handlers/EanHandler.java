@@ -18,7 +18,7 @@ public class EanHandler {
     }
 
     public String generateEan(Integer length){
-        if (length != 8 && length != 13) throw new IllegalArgumentException("Длинна кода должна быть 8 или 13");
+        if (length != 8 && length != 13) throw new IllegalArgumentException("Длина кода должна быть 8 или 13");
         String baseCode = generateBaseCode(length-1);
         String checkDigit = generateCheckDigit(baseCode);
         return baseCode + checkDigit;

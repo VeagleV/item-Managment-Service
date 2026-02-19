@@ -1,12 +1,13 @@
 package com.crm.item.core.controllers;
 
-
-import com.crm.item.core.dtos.ItemDTO;
+import com.crm.item.core.dtos.ItemRequest;
+import com.crm.item.core.dtos.ItemResponse;
 import com.crm.item.core.entites.ItemList;
 import com.crm.item.core.servicies.ItemListService;
 import com.crm.item.core.servicies.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,32 +27,32 @@ public class ItemController {
 
     @GetMapping
     @Operation(summary = "Все товары")
-    public ResponseEntity<List<ItemDTO>> getAllItems() {
+    public ResponseEntity<List<ItemResponse>> getAllItems() {
         return itemService.findAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Товар по его Id")
-    public ResponseEntity<ItemDTO> getItemById(@PathVariable Integer id) {
+    public ResponseEntity<ItemResponse> getItemById(@PathVariable Integer id) {
         return itemService.findById(id);
     }
 
     @PostMapping
     @Operation(summary = "Создание товара")
-    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO) {
-        return itemService.save(itemDTO);
+    public ResponseEntity<ItemResponse> createItem(@RequestBody ItemRequest itemRequest) {
+        return itemService.save(itemRequest);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "'мягкое' удаление товара")
-    public ResponseEntity<ItemDTO> deleteItemById(@PathVariable Integer id) {
+    public ResponseEntity<ItemResponse> deleteItemById(@PathVariable Integer id) {
         return itemService.delete(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "обновление товара")
-    public ResponseEntity<ItemDTO> updateItemById(@PathVariable Integer id, @RequestBody ItemDTO itemDTO) {
-        return itemService.update(id, itemDTO);
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody ItemRequest itemRequest) {
+        return itemService.update(id, itemRequest);
     }
 
     @GetMapping("/itemsList/{id}")
@@ -70,10 +71,10 @@ public class ItemController {
     @PutMapping("/itemsList/")
     @Operation(summary = "добавление или обновление  itemList пачкой(.xlsx/.json)")
     public ResponseEntity<List<ItemList>> getItemLists() {
-        return itemListService.bulkSaving();
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PutMapping("/itemsList/{warehouseId}{itemId}")
+    @PutMapping("/itemsList/{warehouseId}/{itemId}")
     @Operation(summary = "обновление количества товара, который хранится на конкретном складе")
     public ResponseEntity<ItemList> updateItemListQuantity(@PathVariable Integer warehouseId, @PathVariable Integer itemId, @RequestParam Integer quantity) {
         return itemListService.updateQuantity(warehouseId, itemId, quantity);

@@ -1,7 +1,7 @@
 package com.crm.item.core.servicies;
 
-
-import com.crm.item.core.dtos.ItemDTO;
+import com.crm.item.core.dtos.ItemRequest;
+import com.crm.item.core.dtos.ItemResponse;
 import com.crm.item.core.entites.Item;
 import com.crm.item.core.handlers.EanHandler;
 import com.crm.item.core.mapper.ItemMapper;
@@ -27,42 +27,42 @@ public class ItemService {
         this.itemMapper = itemMapper;
     }
 
-    public ResponseEntity<ItemDTO> save(ItemDTO itemDTO) {
-        itemDTO.setId(null);
-        if (itemDTO.getEan().isEmpty()) {
-            itemDTO.setEan(eanHandler.generateEan(13));
+    public ResponseEntity<ItemResponse> save(ItemRequest ItemRequest) {
+        if (ItemRequest.getEan() == null || ItemRequest.getEan().isEmpty()) {
+            ItemRequest.setEan(eanHandler.generateEan(13));
         } else {
-            if (!eanHandler.isValidEan(itemDTO.getEan())) return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+            if (!eanHandler.isValidEan(ItemRequest.getEan()) || itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
         }
-        Item savedItem = itemRepository.save(itemMapper.toEntity(itemDTO));
-        return new ResponseEntity<>(itemMapper.toDTO(savedItem), HttpStatus.CREATED);
+        Item parentItem = itemRepository.findById(ItemRequest.getParentItemId()).orElse(null);
+        Item savedItem = itemRepository.save(itemMapper.toItem(ItemRequest, parentItem));
+        return new ResponseEntity<>(itemMapper.toItemResponse(savedItem), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ItemDTO> findById(Integer id) {
-        Item item = itemRepository.findById(id).orElse(null);
-        return item == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(itemMapper.toDTO(item), HttpStatus.OK);
+    public ResponseEntity<ItemResponse> findById(Integer id) {
+        Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
+        return item == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(itemMapper.toItemResponse(item), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ItemDTO>> findAll() {
+    public ResponseEntity<List<ItemResponse>> findAll() {
         List<Item> items = itemRepository.findAll();
-        List<ItemDTO> itemDTOs = items.stream()
-                .map(itemMapper::toDTO)
+        List<ItemResponse> itemResponseList = items.stream()
+                .map(itemMapper::toItemResponse)
                 .toList();
-        return items.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(itemDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(itemResponseList, HttpStatus.OK);
     }
 
-    public ResponseEntity<ItemDTO> update(Integer id, ItemDTO itemDTO) {
-        Item item = itemRepository.findById(id).orElse(null);
+    public ResponseEntity<ItemResponse> update(Integer id, ItemRequest ItemRequest) {
+        Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        itemRepository.save(itemMapper.toEntity(itemDTO));
-        return new ResponseEntity<>(itemDTO, HttpStatus.NO_CONTENT);
+        save(ItemRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<ItemDTO> delete(Integer id) {
-        Item item = itemRepository.findById(id).orElse(null);
+    public ResponseEntity<ItemResponse> delete(Integer id) {
+        Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         item.setActive(false);
         itemRepository.save(item);
-        return new ResponseEntity<>(itemMapper.toDTO(item), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(itemMapper.toItemResponse(item), HttpStatus.NO_CONTENT);
     }
 }
