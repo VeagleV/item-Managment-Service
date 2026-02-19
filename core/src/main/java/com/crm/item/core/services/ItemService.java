@@ -80,22 +80,22 @@ public class ItemService {
         return new ResponseEntity<>(itemResponseList, HttpStatus.OK);
     }
 
-    public ResponseEntity<ItemResponse> update(Integer id, ItemRequest ItemRequest) {
+    public ResponseEntity<ItemResponse> update(Integer id, ItemRequest itemRequest) {
         Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        String newEan = ItemRequest.getEan();
+        String newEan = itemRequest.getEan();
         if (newEan == null || newEan.isEmpty() || !eanHandler.isValidEan(newEan)) new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
 
-        if (!newEan.equals(ItemRequest.getEan())) {
+        if (!newEan.equals(itemRequest.getEan())) {
             if (itemRepository.existsByEanAndActiveIsTrue(newEan)) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
             item.setEan(newEan);
         }
-        Integer parentItemID = ItemRequest.getParentItemId();
+        Integer parentItemID = itemRequest.getParentItemId();
         Item parentItem = parentItemID == null ? null : itemRepository.findById(parentItemID).orElse(null);
-        item.setName(ItemRequest.getName());
-        item.setUnit(ItemRequest.getUnit());
+        item.setName(itemRequest.getName());
+        item.setUnit(itemRequest.getUnit());
         item.setParentItem(parentItem);
         itemRepository.save(item);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
