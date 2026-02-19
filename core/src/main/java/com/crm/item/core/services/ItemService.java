@@ -109,6 +109,6 @@ public class ItemService {
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         item.setActive(false);
         itemRepository.save(item);
-        return new ResponseEntity<>(itemMapper.toItemResponse(item), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
