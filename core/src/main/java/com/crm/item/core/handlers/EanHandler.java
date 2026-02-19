@@ -32,11 +32,18 @@ public class EanHandler {
         return sb.toString();
     }
 
-    public String generateCheckDigit(String baseCode){
+    public String generateCheckDigit(String baseCode) {
         int sum = 0;
-        for (int i = 0; i < baseCode.length(); i++) {
-            int digit = Character.getNumericValue(baseCode.charAt(i));
-            sum += (i % 2 == 0) ? digit : digit * 3;
+        if (baseCode.length() == 13) {
+            for (int i = 0; i < baseCode.length(); i++) {
+                int digit = Character.getNumericValue(baseCode.charAt(i));
+                sum += (i % 2 == 0) ? digit : digit * 3;
+            }
+        } else if (baseCode.length() == 8) {
+            for (int i = 0; i < baseCode.length(); i++) {
+                int digit = Character.getNumericValue(baseCode.charAt(i));
+                sum += (i % 2 == 0) ? digit * 3 : digit;
+            }
         }
         int checksum = (10 - (sum % 10)) % 10;
         return String.valueOf(checksum);
