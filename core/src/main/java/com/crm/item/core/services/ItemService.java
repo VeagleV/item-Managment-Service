@@ -27,20 +27,6 @@ public class ItemService {
         this.itemMapper = itemMapper;
     }
 
-//    public ResponseEntity<Object> validateEanInRequest(ItemRequest ItemRequest) {
-//        if (ItemRequest.getEan() == null || ItemRequest.getEan().isEmpty()) {
-//            ItemRequest.setEan(eanHandler.generateEan(13));
-//        } else {
-//            if (!eanHandler.isValidEan(ItemRequest.getEan())) {
-//                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
-//            }
-//            if (itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) {
-//                return new ResponseEntity<>(HttpStatus.CONFLICT);
-//            }
-//        }
-//        return null;
-//    }
-
     public ResponseEntity<ItemResponse> save(ItemRequest ItemRequest) {
         String ean = ItemRequest.getEan();
         if (ean == null || ean.isEmpty()) {
@@ -48,6 +34,7 @@ public class ItemService {
             while (itemRepository.existsByEanAndActiveIsTrue(newEan)){
                 newEan = eanHandler.generateEan(13);
             }
+            ItemRequest.setEan(newEan);
         } else {
             if (!eanHandler.isValidEan(ean)) {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
@@ -87,9 +74,9 @@ public class ItemService {
         Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         String newEan = itemRequest.getEan();
-        if (newEan == null || newEan.isEmpty() || !eanHandler.isValidEan(newEan)) new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+        if (newEan == null || newEan.isEmpty() || !eanHandler.isValidEan(newEan)) return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
 
-        if (!newEan.equals(itemRequest.getEan())) {
+        if (!newEan.equals(item.getEan())) {
             if (itemRepository.existsByEanAndActiveIsTrue(newEan)) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @Tag(name = "работа с товарами")
+@Validated
 public class ItemController {
 
     private final ItemService itemService;
@@ -44,7 +46,7 @@ public class ItemController {
     }
 
     @Operation(summary = "Создание товара")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ItemResponse> createItem(@RequestBody ItemRequest itemRequest) {
         return itemService.save(itemRequest);
     }

@@ -35,12 +35,12 @@ public class EanHandler {
     public String generateCheckDigit(String baseCode) {
         int sum = 0;
         if (baseCode.length() == 13) {
-            for (int i = 0; i < baseCode.length(); i++) {
+            for (int i = 0; i < baseCode.length()-1; i++) {
                 int digit = Character.getNumericValue(baseCode.charAt(i));
                 sum += (i % 2 == 0) ? digit : digit * 3;
             }
         } else if (baseCode.length() == 8) {
-            for (int i = 0; i < baseCode.length(); i++) {
+            for (int i = 0; i < baseCode.length()-1; i++) {
                 int digit = Character.getNumericValue(baseCode.charAt(i));
                 sum += (i % 2 == 0) ? digit * 3 : digit;
             }
