@@ -75,7 +75,7 @@ public class ItemService {
         return new ResponseEntity<>(itemResponseList, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ItemResponse>> findByAllByParentItemId(Integer parentItemId) {
+    public ResponseEntity<List<ItemResponse>> findAllByParentItemId(Integer parentItemId) {
         List<Item> items = itemRepository.findByParentItem_IdAndActiveIsTrue(parentItemId);
         List<ItemResponse> itemResponseList = items.stream()
                 .map(itemMapper::toItemResponse)

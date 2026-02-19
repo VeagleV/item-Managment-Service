@@ -40,7 +40,7 @@ public class ItemController {
     @Operation(summary = "Все дочерние товары по id предка")
     @GetMapping("/parentItemId/{parentItemId}")
     public ResponseEntity<List<ItemResponse>> getItemsByParentItemId(@PathVariable Integer parentItemId) {
-        return itemService.findByAllByParentItemId(parentItemId);
+        return itemService.findAllByParentItemId(parentItemId);
     }
 
     @Operation(summary = "Создание товара")

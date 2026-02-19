@@ -34,12 +34,12 @@ public class ItemListService {
 
     public ResponseEntity<List<ItemList>> findAllByWarehouseId(Integer warehouseId) {
         List<ItemList> itemsList = itemListRepository.findByWarehouseId(warehouseId);
-        return itemsList.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(itemsList, HttpStatus.OK);
+        return new ResponseEntity<>(itemsList, HttpStatus.OK);
     }
 
     public ResponseEntity<List<ItemList>> findAllByItemId(Integer itemId) {
         List<ItemList> itemsList = itemListRepository.findByItem_Id(itemId);
-        return itemsList.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(itemsList, HttpStatus.OK);
+        return new ResponseEntity<>(itemsList, HttpStatus.OK);
     }
 
     public ResponseEntity<ItemList> findByWarehouseIdAndItemId(Integer warehouseId, Integer itemId) {
