@@ -27,14 +27,29 @@ public class ItemService {
         this.itemMapper = itemMapper;
     }
 
+//    public ResponseEntity<Object> validateEanInRequest(ItemRequest ItemRequest) {
+//        if (ItemRequest.getEan() == null || ItemRequest.getEan().isEmpty()) {
+//            ItemRequest.setEan(eanHandler.generateEan(13));
+//        } else {
+//            if (!eanHandler.isValidEan(ItemRequest.getEan())) {
+//                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+//            }
+//            if (itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) {
+//                return new ResponseEntity<>(HttpStatus.CONFLICT);
+//            }
+//        }
+//        return null;
+//    }
+
     public ResponseEntity<ItemResponse> save(ItemRequest ItemRequest) {
-        if (ItemRequest.getEan() == null || ItemRequest.getEan().isEmpty()) {
+        String ean = ItemRequest.getEan();
+        if (ean == null || ean.isEmpty()) {
             ItemRequest.setEan(eanHandler.generateEan(13));
         } else {
-            if (!eanHandler.isValidEan(ItemRequest.getEan())) {
+            if (!eanHandler.isValidEan(ean)) {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
             }
-            if (itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) {
+            if (itemRepository.existsByEanAndActiveIsTrue(ean)) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         }
@@ -68,7 +83,21 @@ public class ItemService {
     public ResponseEntity<ItemResponse> update(Integer id, ItemRequest ItemRequest) {
         Item item = itemRepository.findByIdAndActiveIsTrue(id).orElse(null);
         if ( item == null )  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        save(ItemRequest);
+        String newEan = ItemRequest.getEan();
+        if (newEan == null || newEan.isEmpty() || !eanHandler.isValidEan(newEan)) new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+
+        if (!newEan.equals(ItemRequest.getEan())) {
+            if (itemRepository.existsByEanAndActiveIsTrue(newEan)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            item.setEan(newEan);
+        }
+        Integer parentItemID = ItemRequest.getParentItemId();
+        Item parentItem = parentItemID == null ? null : itemRepository.findById(parentItemID).orElse(null);
+        item.setName(ItemRequest.getName());
+        item.setUnit(ItemRequest.getUnit());
+        item.setParentItem(parentItem);
+        itemRepository.save(item);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
