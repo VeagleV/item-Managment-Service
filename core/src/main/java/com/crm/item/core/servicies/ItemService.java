@@ -31,7 +31,12 @@ public class ItemService {
         if (ItemRequest.getEan() == null || ItemRequest.getEan().isEmpty()) {
             ItemRequest.setEan(eanHandler.generateEan(13));
         } else {
-            if (!eanHandler.isValidEan(ItemRequest.getEan()) || itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+            if (!eanHandler.isValidEan(ItemRequest.getEan())) {
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+            }
+            if (itemRepository.existsByEanAndActiveIsTrue(ItemRequest.getEan())) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }
         Item parentItem = itemRepository.findById(ItemRequest.getParentItemId()).orElse(null);
         Item savedItem = itemRepository.save(itemMapper.toItem(ItemRequest, parentItem));
@@ -44,7 +49,15 @@ public class ItemService {
     }
 
     public ResponseEntity<List<ItemResponse>> findAll() {
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = itemRepository.findByActiveIsTrue();
+        List<ItemResponse> itemResponseList = items.stream()
+                .map(itemMapper::toItemResponse)
+                .toList();
+        return new ResponseEntity<>(itemResponseList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<ItemResponse>> findByAllByParentItemId(Integer parentItemId) {
+        List<Item> items = itemRepository.findByParentItem_IdAndActiveIsTrue(parentItemId);
         List<ItemResponse> itemResponseList = items.stream()
                 .map(itemMapper::toItemResponse)
                 .toList();

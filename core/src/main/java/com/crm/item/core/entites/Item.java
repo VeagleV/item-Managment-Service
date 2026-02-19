@@ -38,4 +38,11 @@ public class Item {
 
     public Integer getParentItemId(){
         return parentItem != null ?  parentItem.getId() : null; }
+
+    @PrePersist
+    public void prePersist(){
+        if (active == null) {
+            active = true;
+        }
+    }
 }

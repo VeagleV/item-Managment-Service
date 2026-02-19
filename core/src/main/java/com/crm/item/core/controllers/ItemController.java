@@ -25,57 +25,65 @@ public class ItemController {
         this.itemListService = itemListService;
     }
 
-    @GetMapping
     @Operation(summary = "Все товары")
+    @GetMapping
     public ResponseEntity<List<ItemResponse>> getAllItems() {
         return itemService.findAll();
     }
 
-    @GetMapping("/{id}")
     @Operation(summary = "Товар по его Id")
+    @GetMapping("/{id}")
     public ResponseEntity<ItemResponse> getItemById(@PathVariable Integer id) {
         return itemService.findById(id);
     }
 
-    @PostMapping
+    @Operation(summary = "Все дочерние товары по id предка")
+    @GetMapping("/parentItemId/{parentItemId}")
+    public ResponseEntity<List<ItemResponse>> getItemsByParentItemId(@PathVariable Integer parentItemId) {
+        return itemService.findByAllByParentItemId(parentItemId);
+    }
+
     @Operation(summary = "Создание товара")
+    @PostMapping("/")
     public ResponseEntity<ItemResponse> createItem(@RequestBody ItemRequest itemRequest) {
         return itemService.save(itemRequest);
     }
 
-    @DeleteMapping("/{id}")
+
     @Operation(summary = "'мягкое' удаление товара")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ItemResponse> deleteItemById(@PathVariable Integer id) {
         return itemService.delete(id);
     }
 
-    @PutMapping("/{id}")
+    //FIXME: Не работает. выкидывает 415 Unsupported Media Type
     @Operation(summary = "обновление товара")
+    @PutMapping("/{id}")
     public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody ItemRequest itemRequest) {
         return itemService.update(id, itemRequest);
     }
 
-    @GetMapping("/itemsList/{id}")
     @Operation(summary = "itemlist по его id")
+    @GetMapping("/itemsList/{id}")
     public ResponseEntity<ItemList> getItemListById(@PathVariable Integer id) {
         return itemListService.findById(id);
     }
 
-    @GetMapping("/warehouse/{warehouseId}")
     @Operation(summary = "все itemList по id склада(информация о том какие товары хранятся на конкретном складе)")
+    @GetMapping("/warehouse/{warehouseId}")
     public ResponseEntity<List<ItemList>> getItemListsByWarehouseId(@PathVariable Integer warehouseId){
         return itemListService.findAllByWarehouseId(warehouseId);
     }
 
     //TODO: Доделать парсинг файлов
-    @PutMapping("/itemsList/")
     @Operation(summary = "добавление или обновление  itemList пачкой(.xlsx/.json)")
+    @PutMapping("/itemsList/")
     public ResponseEntity<List<ItemList>> getItemLists() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @PutMapping("/itemsList/{warehouseId}/{itemId}")
     @Operation(summary = "обновление количества товара, который хранится на конкретном складе")
+    @PutMapping("/itemsList/{warehouseId}/{itemId}")
     public ResponseEntity<ItemList> updateItemListQuantity(@PathVariable Integer warehouseId, @PathVariable Integer itemId, @RequestParam Integer quantity) {
         return itemListService.updateQuantity(warehouseId, itemId, quantity);
     }

@@ -29,7 +29,7 @@ public class ItemResponse {
     @NotBlank
     private String ean;
 
-    @JsonProperty("parent_item_Id")
+    @JsonProperty("parent_item_id")
     private Integer parentItemId;
 
     @JsonProperty

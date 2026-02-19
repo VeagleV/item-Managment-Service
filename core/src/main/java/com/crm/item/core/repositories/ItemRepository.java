@@ -8,15 +8,11 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
 
-
-    List<Item> findByParentItemId(Integer parentItemId);
-
-    Optional<Item> findByEan(String ean);
+    List<Item> findByParentItem_IdAndActiveIsTrue(Integer parentItemId);
 
     Optional<Item> findByIdAndActiveIsTrue(Integer id);
 
     boolean existsByEanAndActiveIsTrue(String ean);
 
-    boolean existsByNameAndActiveIsTrue(String name);
-
+    List<Item> findByActiveIsTrue();
 }
