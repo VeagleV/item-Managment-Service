@@ -1,4 +1,4 @@
-package com.crm.item.core.servicies;
+package com.crm.item.core.services;
 
 import com.crm.item.core.entites.ItemList;
 import com.crm.item.core.repositories.ItemListRepository;
