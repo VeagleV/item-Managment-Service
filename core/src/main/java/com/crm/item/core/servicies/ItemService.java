@@ -3,6 +3,7 @@ package com.crm.item.core.servicies;
 
 import com.crm.item.core.dtos.ItemDTO;
 import com.crm.item.core.entities.Item;
+import com.crm.item.core.handlers.EanHandler;
 import com.crm.item.core.mapper.ItemMapper;
 import com.crm.item.core.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,25 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final EanHandler eanHandler;
 
     private final ItemMapper itemMapper;
     @Autowired
-    public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
+    public ItemService(ItemRepository itemRepository, EanHandler eanHandler, ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
+        this.eanHandler = eanHandler;
         this.itemMapper = itemMapper;
     }
 
     public ResponseEntity<ItemDTO> save(ItemDTO itemDTO) {
-        itemRepository.save(itemMapper.toEntity(itemDTO));
-        return new ResponseEntity<>(itemDTO, HttpStatus.CREATED);
+        itemDTO.setId(null);
+        if (itemDTO.getEan().isEmpty()) {
+            itemDTO.setEan(eanHandler.generateEan(13));
+        } else {
+            if (!eanHandler.isValidEan(itemDTO.getEan())) return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_CONTENT);
+        }
+        Item savedItem = itemRepository.save(itemMapper.toEntity(itemDTO));
+        return new ResponseEntity<>(itemMapper.toDTO(savedItem), HttpStatus.CREATED);
     }
 
     public ResponseEntity<ItemDTO> findById(Integer id) {
