@@ -38,7 +38,8 @@ public class ItemService {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         }
-        Item parentItem = itemRepository.findById(ItemRequest.getParentItemId()).orElse(null);
+        Integer parentItemID = ItemRequest.getParentItemId();
+        Item parentItem = parentItemID == null ? null : itemRepository.findById(parentItemID).orElse(null);
         Item savedItem = itemRepository.save(itemMapper.toItem(ItemRequest, parentItem));
         return new ResponseEntity<>(itemMapper.toItemResponse(savedItem), HttpStatus.CREATED);
     }
