@@ -33,6 +33,5 @@ public class ItemList {
     @Column(nullable = false)
     private Integer quantity;
 
-
     public Integer getItemId() { return item.getId(); }
 }

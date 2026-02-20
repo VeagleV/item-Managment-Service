@@ -23,7 +23,7 @@ public class Item {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "ean", nullable = false, length = 13, columnDefinition = "ean13")
+    @Column(name = "ean", nullable = false, unique = true, length = 13)
     private String ean;
 
     @Column(nullable = false)
@@ -38,4 +38,11 @@ public class Item {
 
     public Integer getParentItemId(){
         return parentItem != null ?  parentItem.getId() : null; }
+
+    @PrePersist
+    public void prePersist(){
+        if (active == null) {
+            active = true;
+        }
+    }
 }
