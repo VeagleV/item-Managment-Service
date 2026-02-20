@@ -32,51 +32,59 @@ public class ItemController {
     @Operation(summary = "Все товары")
     @GetMapping
     public ResponseEntity<List<ItemResponse>> getAllItems() {
-        return itemService.findAll();
+        List<ItemResponse> ItemResponseList = itemService.findAll();
+        return new ResponseEntity<>(ItemResponseList, HttpStatus.OK);
     }
 
     @Operation(summary = "Товар по его Id")
     @GetMapping("/{id}")
-    public ResponseEntity<ItemResponse> getItemById(@PathVariable Integer id) {
-        return itemService.findById(id);
+    public ResponseEntity<ItemResponse> getItemById(@PathVariable @PositiveOrZero Integer id) {
+        ItemResponse itemResponse =  itemService.findById(id);
+        return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
 
     @Operation(summary = "Все дочерние товары по id предка")
     @GetMapping("/parentItemId/{parentItemId}")
-    public ResponseEntity<List<ItemResponse>> getItemsByParentItemId(@PathVariable Integer parentItemId) {
-        return itemService.findAllByParentItemId(parentItemId);
+    public ResponseEntity<List<ItemResponse>> getItemsByParentItemId(@PathVariable @PositiveOrZero Integer parentItemId) {
+        List<ItemResponse> itemResponseList = itemService.findAllByParentItemId(parentItemId);
+        return new ResponseEntity<>(itemResponseList, HttpStatus.OK);
     }
 
     @Operation(summary = "Создание товара")
     @PostMapping
     public ResponseEntity<ItemResponse> createItem(@RequestBody @Valid ItemRequest itemRequest) {
-        return itemService.save(itemRequest);
+        ItemResponse itemResponse = itemService.save(itemRequest);
+        return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
     }
 
 
     @Operation(summary = "'мягкое' удаление товара")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ItemResponse> deleteItemById(@PathVariable Integer id) {
-        return itemService.delete(id);
+    public ResponseEntity<ItemResponse> deleteItemById(@PathVariable @PositiveOrZero Integer id) {
+       itemService.delete(id);
+       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //FIXME: Не работает. выкидывает 415 Unsupported Media Type
     @Operation(summary = "обновление товара")
     @PutMapping("/{id}")
-    public ResponseEntity<ItemResponse> updateItemById(@PathVariable Integer id, @RequestBody @Valid ItemRequest itemRequest) {
-        return itemService.update(id, itemRequest);
+    public ResponseEntity<ItemResponse> updateItemById(@PathVariable @PositiveOrZero Integer id, @RequestBody @Valid ItemRequest itemRequest) {
+        itemService.update(id, itemRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Operation(summary = "itemlist по его id")
     @GetMapping("/itemsList/{id}")
     public ResponseEntity<ItemList> getItemListById(@PathVariable Integer id) {
-        return itemListService.findById(id);
+        ItemList itemList = itemListService.findById(id);
+        return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
     @Operation(summary = "все itemList по id склада(информация о том какие товары хранятся на конкретном складе)")
     @GetMapping("/warehouse/{warehouseId}")
-    public ResponseEntity<List<ItemList>> getItemListsByWarehouseId(@PathVariable Integer warehouseId){
-        return itemListService.findAllByWarehouseId(warehouseId);
+    public ResponseEntity<List<ItemList>> getItemListsByWarehouseId(@PathVariable @PositiveOrZero Integer warehouseId){
+        List<ItemList> itemLists = itemListService.findAllByWarehouseId(warehouseId);
+        return new ResponseEntity<>(itemLists, HttpStatus.OK);
     }
 
     //TODO: Доделать парсинг файлов
@@ -91,7 +99,8 @@ public class ItemController {
     public ResponseEntity<ItemList> updateItemListQuantity(@PathVariable @PositiveOrZero Integer warehouseId,
                                                            @PathVariable @PositiveOrZero Integer itemId,
                                                            @RequestParam @PositiveOrZero Integer quantity) {
-        return itemListService.updateQuantity(warehouseId, itemId, quantity);
+        itemListService.updateQuantity(warehouseId, itemId, quantity);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

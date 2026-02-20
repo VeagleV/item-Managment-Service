@@ -1,11 +1,10 @@
 package com.crm.item.core.services;
 
 import com.crm.item.core.entities.ItemList;
+import com.crm.item.core.exceptions.ResourceNotFoundException;
 import com.crm.item.core.repositories.ItemListRepository;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,44 +20,39 @@ public class ItemListService {
     }
 
 
-    public ResponseEntity<ItemList> save(ItemList itemList) {
+    public ItemList save(ItemList itemList) {
         itemListRepository.save(itemList);
-        return new ResponseEntity<>(itemList, HttpStatus.OK);
+        return itemList;
     }
 
-    public ResponseEntity<ItemList> findById(Integer id) {
-        ItemList itemList = itemListRepository.findById(id).orElse(null);
-        if (itemList == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(itemList, HttpStatus.OK);
+    public ItemList findById(Integer id) {
+        return itemListRepository.findById(id).orElse(null);
     }
 
-    public ResponseEntity<List<ItemList>> findAllByWarehouseId(Integer warehouseId) {
-        List<ItemList> itemsList = itemListRepository.findByWarehouseId(warehouseId);
-        return new ResponseEntity<>(itemsList, HttpStatus.OK);
+    public List<ItemList> findAllByWarehouseId(Integer warehouseId) {
+        return itemListRepository.findByWarehouseId(warehouseId);
     }
 
-    public ResponseEntity<List<ItemList>> findAllByItemId(Integer itemId) {
-        List<ItemList> itemsList = itemListRepository.findByItem_Id(itemId);
-        return new ResponseEntity<>(itemsList, HttpStatus.OK);
+    public List<ItemList> findAllByItemId(Integer itemId) {
+        return itemListRepository.findByItem_Id(itemId);
     }
 
-    public ResponseEntity<ItemList> findByWarehouseIdAndItemId(Integer warehouseId, Integer itemId) {
+    public ItemList findByWarehouseIdAndItemId(Integer warehouseId, Integer itemId) {
+        return itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
+    }
+
+    public void updateQuantity(Integer warehouseId, Integer itemId,@PositiveOrZero Integer newQuantity) {
         ItemList itemList = itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
-        if (itemList == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(itemList, HttpStatus.OK);
-    }
-
-    public ResponseEntity<ItemList> updateQuantity(Integer warehouseId, Integer itemId,@PositiveOrZero Integer newQuantity) {
-        ItemList itemList = itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
-        if (itemList == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (itemList == null) throw new ResourceNotFoundException("ItemList");
         itemList.setQuantity(newQuantity);
-        return save(itemList);
+        save(itemList);
     }
 
     //TODO: реализовать сохранение / обновление товаров с помощью JSON/XLSX файлов
-    public ResponseEntity<List<ItemList>> bulkSaving(){
+    public List<ItemList> bulkSaving(){
+        List<ItemList> itemLists = new ArrayList<>();
 
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return itemLists;
     }
 
 
