@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.crm.item</groupId>
-    <artifactId>imsService</artifactId>
+    <artifactId>itemManagementService</artifactId>
     <version>0.1.0</version>
-    <name>imService</name>
+    <name>itemManagementService</name>
     <description>core</description>
     <url/>
     <licenses>
