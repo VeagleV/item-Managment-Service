@@ -1,8 +1,10 @@
 package com.crm.item.core.repositories;
 
 import com.crm.item.core.entities.ItemList;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +16,6 @@ public interface ItemListRepository extends JpaRepository<ItemList, Integer> {
 
     Optional<ItemList> findByWarehouseIdAndItem_Id(Integer warehouseId, Integer itemId);
 
-
+    List<ItemList> findAllByItem_IdIn(Collection<Integer> itemIds);
 
 }

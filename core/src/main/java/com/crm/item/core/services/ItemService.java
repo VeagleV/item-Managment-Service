@@ -9,14 +9,12 @@ import com.crm.item.core.exceptions.ResourceNotFoundException;
 import com.crm.item.core.handlers.EanHandler;
 import com.crm.item.core.mapper.ItemMapper;
 import com.crm.item.core.repositories.ItemRepository;
-import org.profiling.Profiling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Profiling
 public class ItemService {
 
     private final ItemRepository itemRepository;
@@ -50,6 +48,7 @@ public class ItemService {
                 .map(itemMapper::toItemResponse)
                 .toList();
     }
+
 
     public List<ItemResponse> findAllByParentItemId(Integer parentItemId) {
         List<Item> items = itemRepository.findByParentItem_IdAndActiveIsTrue(parentItemId);

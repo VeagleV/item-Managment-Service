@@ -1,10 +1,12 @@
 package com.crm.item.core.controllers;
 
+import com.crm.item.core.dtos.ItemListResponse;
 import com.crm.item.core.dtos.ItemRequest;
 import com.crm.item.core.dtos.ItemResponse;
 import com.crm.item.core.entities.ItemList;
 import com.crm.item.core.services.ItemListService;
 import com.crm.item.core.services.ItemService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -78,6 +80,12 @@ public class ItemController {
     public ResponseEntity<ItemList> getItemListById(@PathVariable Integer id) {
         ItemList itemList = itemListService.findById(id);
         return new ResponseEntity<>(itemList, HttpStatus.OK);
+    }
+
+    @GetMapping("/itemsList/items")
+    public ResponseEntity<List<ItemListResponse>> getAllItemList(@RequestBody @JsonProperty("item_id") List<Integer> itemIdList) {
+        List<ItemListResponse> itemListResponse = itemListService.findAllByItemIdList(itemIdList);
+        return new ResponseEntity<>(itemListResponse, HttpStatus.OK);
     }
 
     @Operation(summary = "все itemList по id склада(информация о том какие товары хранятся на конкретном складе)")

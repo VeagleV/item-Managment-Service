@@ -1,7 +1,9 @@
 package com.crm.item.core.services;
 
+import com.crm.item.core.dtos.ItemListResponse;
 import com.crm.item.core.entities.ItemList;
 import com.crm.item.core.exceptions.ResourceNotFoundException;
+import com.crm.item.core.mapper.ItemListMapper;
 import com.crm.item.core.repositories.ItemListRepository;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,12 @@ import java.util.List;
 @Service
 public class ItemListService {
     private final ItemListRepository itemListRepository;
+    private final ItemListMapper itemListMapper;
 
     @Autowired
-    public ItemListService(ItemListRepository itemListRepository) {
+    public ItemListService(ItemListRepository itemListRepository, ItemListMapper itemListMapper) {
         this.itemListRepository = itemListRepository;
+        this.itemListMapper = itemListMapper;
     }
 
 
@@ -56,4 +60,9 @@ public class ItemListService {
     }
 
 
+    public List<ItemListResponse> findAllByItemIdList(List<Integer> itemIdList) {
+        return itemListRepository.findAllByItem_IdIn(itemIdList).stream()
+                .map(itemListMapper::toItemListResponce)
+                .toList();
+    }
 }
