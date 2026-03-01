@@ -82,7 +82,7 @@ public class ItemController {
         return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    @GetMapping("/itemsList/items")
+    @PostMapping("/itemsList/items")
     public ResponseEntity<List<ItemListResponse>> getAllItemList(@RequestBody @JsonProperty("item_id") List<Integer> itemIdList) {
         List<ItemListResponse> itemListResponse = itemListService.findAllByItemIdList(itemIdList);
         return new ResponseEntity<>(itemListResponse, HttpStatus.OK);
