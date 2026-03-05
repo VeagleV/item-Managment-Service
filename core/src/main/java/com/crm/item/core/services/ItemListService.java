@@ -45,20 +45,14 @@ public class ItemListService {
         return itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
     }
 
-    public void updateQuantity(Integer warehouseId, Integer itemId,@PositiveOrZero Integer newQuantity) {
+    public void updateQuantity(Integer warehouseId, Integer itemId,Integer quantityDifference) {
         ItemList itemList = itemListRepository.findByWarehouseIdAndItem_Id(warehouseId, itemId).orElse(null);
         if (itemList == null) throw new ResourceNotFoundException("ItemList");
-        itemList.setQuantity(newQuantity);
+        if (itemList.getQuantity() + quantityDifference < 0)
+            throw new IllegalArgumentException("Can't update quantity, cause it will be negative (quantityDifference=" + quantityDifference + ", itemQuantity=" + itemList.getQuantity() + ")");
+        itemList.setQuantity(itemList.getQuantity() + quantityDifference);
         save(itemList);
     }
-
-    //TODO: реализовать сохранение / обновление товаров с помощью JSON/XLSX файлов
-    public List<ItemList> bulkSaving(){
-        List<ItemList> itemLists = new ArrayList<>();
-
-        return itemLists;
-    }
-
 
     public List<ItemListResponse> findAllByItemIdList(List<Integer> itemIdList) {
         return itemListRepository.findAllByItem_IdIn(itemIdList).stream()

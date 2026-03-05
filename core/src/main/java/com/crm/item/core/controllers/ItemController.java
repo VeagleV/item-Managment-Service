@@ -96,7 +96,7 @@ public class ItemController {
     }
 
 
-    @Operation(summary = "обновление  itemList пачкой(.json)")
+    @Operation(summary = "обновление  itemList пачкой(quantity - значение, КОТОРОЕ НУЖНО ПРИБАВИТЬ(ИЛИ ВЫЧЕСТЬ) к(ИЗ) хранящегося quantity")
     @PutMapping("/itemsList/")
     public ResponseEntity<List<ItemList>> getItemLists(@RequestBody List<ItemListResponse> itemListResponses) {
         for(ItemListResponse itemListResponse : itemListResponses){
