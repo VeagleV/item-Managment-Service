@@ -97,7 +97,7 @@ public class ItemController {
 
 
     @Operation(summary = "обновление  itemList пачкой(quantity - значение, КОТОРОЕ НУЖНО ПРИБАВИТЬ(ИЛИ ВЫЧЕСТЬ) к(ИЗ) хранящегося quantity")
-    @PutMapping("/itemsList/")
+    @PutMapping("/itemsList")
     public ResponseEntity<List<ItemList>> getItemLists(@RequestBody List<ItemListResponse> itemListResponses) {
         for(ItemListResponse itemListResponse : itemListResponses){
             itemListService.updateQuantity(itemListResponse.getWarehouseId(), itemListResponse.getItemId(), itemListResponse.getQuantity());
