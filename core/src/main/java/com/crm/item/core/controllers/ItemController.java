@@ -96,9 +96,12 @@ public class ItemController {
     }
 
     //TODO: Доделать парсинг файлов
-    @Operation(summary = "добавление или обновление  itemList пачкой(.xlsx/.json)")
+    @Operation(summary = "добавление или обновление  itemList пачкой(.json)")
     @PutMapping("/itemsList/")
-    public ResponseEntity<List<ItemList>> getItemLists() {
+    public ResponseEntity<List<ItemList>> getItemLists(@RequestBody List<ItemListResponse> itemListResponses) {
+        for(ItemListResponse itemListResponse : itemListResponses){
+            itemListService.updateQuantity(itemListResponse.getWarehouseId(), itemListResponse.getItemId(), itemListResponse.getQuantity());
+        }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
