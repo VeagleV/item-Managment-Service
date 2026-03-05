@@ -95,14 +95,14 @@ public class ItemController {
         return new ResponseEntity<>(itemLists, HttpStatus.OK);
     }
 
-    //TODO: Доделать парсинг файлов
-    @Operation(summary = "добавление или обновление  itemList пачкой(.json)")
+
+    @Operation(summary = "обновление  itemList пачкой(.json)")
     @PutMapping("/itemsList/")
     public ResponseEntity<List<ItemList>> getItemLists(@RequestBody List<ItemListResponse> itemListResponses) {
         for(ItemListResponse itemListResponse : itemListResponses){
             itemListService.updateQuantity(itemListResponse.getWarehouseId(), itemListResponse.getItemId(), itemListResponse.getQuantity());
         }
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "обновление количества товара, который хранится на конкретном складе")
